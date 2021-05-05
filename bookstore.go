@@ -1,4 +1,4 @@
-package main
+package bookstore
 
 import "fmt"
 
@@ -6,6 +6,7 @@ import "fmt"
 type Book struct {
 	Title           string
 	Author          []string
+	Description     string
 	Series          int
 	SeriesTitle     string
 	PriceCents      int
