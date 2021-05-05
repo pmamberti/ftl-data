@@ -12,18 +12,31 @@ type Book struct {
 	DiscountPercent int
 	Copies          int
 	NetPrice        int
+	Featured        bool
 }
 
 var books []Book
 
 func netPrice(b Book) int {
-	discount := float64(b.PriceCents) * float64(b.DiscountPercent) / 100
+	discount := float64(
+		b.PriceCents,
+	) * float64(b.DiscountPercent) / 100
 	return b.PriceCents - int(discount)
 }
 
 func AddBook(c []Book, b Book) []Book {
 	c = append(c, b)
 	return c
+}
+
+func FeaturedBooks(c []Book) []Book {
+	var featured []Book
+	for _, b := range c {
+		if b.Featured {
+			featured = append(featured, b)
+		}
+	}
+	return featured
 }
 
 func main() {
@@ -41,6 +54,7 @@ func main() {
 		Author:          []string{"Will Larson"},
 		PriceCents:      2499,
 		DiscountPercent: 10,
+		Featured:        true,
 	}
 
 	b.NetPrice = netPrice(b)
@@ -50,6 +64,12 @@ func main() {
 	books = AddBook(books, b1)
 
 	for _, b := range books {
-		fmt.Printf("Author(s): %v \nTitle: %v \n ============= \n", b.Author, b.Title)
+		fmt.Printf(
+			"Author(s): %v \nTitle: %v \n ============= \n",
+			b.Author,
+			b.Title,
+		)
 	}
+
+	fmt.Printf("Featured: %v", FeaturedBooks(books))
 }
