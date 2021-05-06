@@ -16,7 +16,7 @@ type Book struct {
 	Featured        bool
 }
 
-var books []Book
+var Books = []Book{}
 
 func netPrice(b Book) int {
 	discount := float64(
@@ -40,37 +40,10 @@ func FeaturedBooks(c []Book) []Book {
 	return featured
 }
 
+func GetAllBooks(c []Book) []Book {
+	return c
+}
+
 func main() {
-	books = []Book{}
-
-	b := Book{
-		Title:           "An Elegant Puzzle",
-		Author:          []string{"Will Larson"},
-		PriceCents:      2999,
-		DiscountPercent: 10,
-	}
-
-	b1 := Book{
-		Title:           "Staff Engineer",
-		Author:          []string{"Will Larson"},
-		PriceCents:      2499,
-		DiscountPercent: 10,
-		Featured:        true,
-	}
-
-	b.NetPrice = netPrice(b)
-	b1.NetPrice = netPrice(b1)
-
-	books = AddBook(books, b)
-	books = AddBook(books, b1)
-
-	for _, b := range books {
-		fmt.Printf(
-			"Author(s): %v \nTitle: %v \n ============= \n",
-			b.Author,
-			b.Title,
-		)
-	}
-
-	fmt.Printf("Featured: %v", FeaturedBooks(books))
+	fmt.Println("Hello! This is Main")
 }
