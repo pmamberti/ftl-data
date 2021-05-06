@@ -18,6 +18,7 @@ func TestBook(t *testing.T) {
 		DiscountPercent: 15,
 		Copies:          10,
 		Featured:        true,
+		ID:              "0000",
 	}
 }
 
