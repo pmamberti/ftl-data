@@ -33,3 +33,6 @@ func TestGetAllBooks(t *testing.T) {
 		t.Error(cmp.Diff(want, got))
 	}
 }
+
+func TestNewID(t *testing.T) {
+}
