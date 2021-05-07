@@ -1,4 +1,4 @@
-package main
+package bookstore
 
 import (
 	"fmt"
@@ -21,7 +21,18 @@ type Book struct {
 	Featured        bool
 }
 
-var Books = []Book{}
+var Books = []Book{
+	{
+		ID:     "Book1",
+		Title:  "This is my first Book",
+		Author: []string{"The Author"},
+	},
+	{
+		ID:     "Book2",
+		Title:  "This is my second Book",
+		Author: []string{"Another Author"},
+	},
+}
 
 func netPrice(b Book) int {
 	discount := float64(
@@ -75,6 +86,21 @@ func NewID(l int) string {
 	}
 	fmt.Println(idSet)
 	return idSet[rand.Intn(len(idSet))]
+}
+
+func GetBookDetails(id string) string {
+	for _, b := range Books {
+		if b.ID == id {
+			return fmt.Sprintf(
+				"ID: %v, Title: %v, Author: %v",
+				b.ID,
+				b.Title,
+				b.Author[0],
+			)
+		}
+	}
+
+	return "Book not found"
 }
 
 func main() {
