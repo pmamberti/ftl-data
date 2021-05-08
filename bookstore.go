@@ -32,6 +32,11 @@ var Books = []Book{
 		Title:  "This is my second Book",
 		Author: []string{"Another Author"},
 	},
+	{
+		ID:     "Book3",
+		Title:  "This is our third Book",
+		Author: []string{"Another Author", "The Author"},
+	},
 }
 
 func netPrice(b Book) int {
@@ -63,11 +68,9 @@ func GetAllBooks(c []Book) []Book {
 func NewID() (id string) {
 	rand.Seed(time.Now().UnixNano())
 	charset := "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789"
-
 	for len(id) < 3 {
 		id += string(charset[rand.Intn(len(charset))])
 	}
-
 	return id
 }
 
@@ -82,8 +85,26 @@ func GetBookDetails(id string) string {
 			)
 		}
 	}
-
 	return "Book not found"
+}
+
+func isIn(s string, l []string) bool {
+	for _, i := range l {
+		if s == i {
+			return true
+		}
+	}
+	return false
+}
+
+func GetAllByAuthor(a string) []Book {
+	results := []Book{}
+	for _, b := range Books {
+		if isIn(a, b.Author) {
+			results = append(results, b)
+		}
+	}
+	return results
 }
 
 func main() {

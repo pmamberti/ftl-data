@@ -34,10 +34,17 @@ func TestGetAllBooks(t *testing.T) {
 		Title:  "This is my second Book",
 		Author: []string{"Another Author"},
 	}
+	book3 := bookstore.Book{
+		ID:     "Book3",
+		Title:  "This is our third Book",
+		Author: []string{"Another Author", "The Author"},
+	}
 
-	bookstore.Books = []bookstore.Book{book1, book2}
+	bookstore.Books = []bookstore.Book{book1, book2, book3}
 	want := bookstore.Books
-	got := bookstore.GetAllBooks([]bookstore.Book{book1, book2})
+	got := bookstore.GetAllBooks(
+		[]bookstore.Book{book1, book2, book3},
+	)
 
 	if !cmp.Equal(want, got) {
 		t.Error(cmp.Diff(want, got))
@@ -84,5 +91,25 @@ func TestGetBookDetails(t *testing.T) {
 			t.Errorf("want (%v) got (%v)", tc.want, got)
 		}
 
+	}
+}
+
+func TestGetAllByAuthor(t *testing.T) {
+	want := []bookstore.Book{
+		{
+			ID:     "Book1",
+			Title:  "This is my first Book",
+			Author: []string{"The Author"},
+		},
+		{
+			ID:     "Book3",
+			Title:  "This is our third Book",
+			Author: []string{"Another Author", "The Author"},
+		},
+	}
+	got := bookstore.GetAllByAuthor("The Author")
+
+	if !cmp.Equal(want, got) {
+		t.Errorf(cmp.Diff(want, got))
 	}
 }
