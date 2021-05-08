@@ -60,32 +60,15 @@ func GetAllBooks(c []Book) []Book {
 	return c
 }
 
-func isIn(s string, l []string) bool {
-	for _, i := range l {
-		if s == i {
-			return true
-		}
-	}
-	return false
-}
-
-func NewID(l int) string {
+func NewID() (id string) {
 	rand.Seed(time.Now().UnixNano())
 	charset := "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789"
-	idSet := []string{}
-	id := ""
 
-	for len(idSet) < 10 {
-		for i := 0; i < l; i++ {
-			id += string(charset[rand.Intn(len(charset))])
-		}
-		if !isIn(id, idSet) {
-			idSet = append(idSet, id)
-		}
-		id = ""
+	for len(id) < 3 {
+		id += string(charset[rand.Intn(len(charset))])
 	}
-	fmt.Println(idSet)
-	return idSet[rand.Intn(len(idSet))]
+
+	return id
 }
 
 func GetBookDetails(id string) string {
@@ -105,5 +88,4 @@ func GetBookDetails(id string) string {
 
 func main() {
 	fmt.Println("Hello! This is Main")
-	fmt.Println(NewID(5))
 }

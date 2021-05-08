@@ -44,8 +44,26 @@ func TestGetAllBooks(t *testing.T) {
 	}
 }
 
+func isIn(s string, l []string) bool {
+	for _, i := range l {
+		if s == i {
+			return true
+		}
+	}
+	return false
+}
+
 func TestNewID(t *testing.T) {
-	// TODO: Add test, once I know what it looks like
+	idSet := []string{}
+
+	for len(idSet) < 1000 {
+		idSet = append(idSet, bookstore.NewID())
+	}
+	got := bookstore.NewID()
+
+	if isIn(got, idSet) {
+		t.Errorf("ID %v is not unique", got)
+	}
 }
 
 func TestGetBookDetails(t *testing.T) {
