@@ -24,27 +24,20 @@ func TestBook(t *testing.T) {
 
 func TestGetAllBooks(t *testing.T) {
 	t.Parallel()
-	book1 := bookstore.Book{
-		ID:     "Book1",
-		Title:  "This is my first Book",
-		Author: []string{"The Author"},
+	testCatalog := bookstore.Catalog{
+		"book1": bookstore.Book{
+			ID:     "Book1",
+			Title:  "This is my first Book",
+			Author: []string{"The Author"},
+		},
+		"book2": bookstore.Book{
+			ID:     "Book2",
+			Title:  "This is my second Book",
+			Author: []string{"Another Author"},
+		},
 	}
-	book2 := bookstore.Book{
-		ID:     "Book2",
-		Title:  "This is my second Book",
-		Author: []string{"Another Author"},
-	}
-	book3 := bookstore.Book{
-		ID:     "Book3",
-		Title:  "This is our third Book",
-		Author: []string{"Another Author", "The Author"},
-	}
-
-	bookstore.Books = []bookstore.Book{book1, book2, book3}
-	want := bookstore.Books
-	got := bookstore.GetAllBooks(
-		[]bookstore.Book{book1, book2, book3},
-	)
+	want := testCatalog
+	got := bookstore.GetAllBooks(testCatalog)
 
 	if !cmp.Equal(want, got) {
 		t.Error(cmp.Diff(want, got))
@@ -75,41 +68,70 @@ func TestNewID(t *testing.T) {
 
 func TestGetBookDetails(t *testing.T) {
 	t.Parallel()
+	testCatalog := bookstore.Catalog{
+		"Book1": {
+			ID:     "Book1",
+			Title:  "This is my First Book",
+			Author: []string{"The Author"},
+		},
+	}
 	testCases := []struct {
-		id, want string
+		name        string
+		catalog     bookstore.Catalog
+		id          string
+		want        bookstore.Book
+		errExpected bool
 	}{
 		{
-			id:   "Book1",
-			want: "ID: Book1, Title: This is my first Book, Author: The Author",
+			name:        "id exists in catalog, returns book by id",
+			catalog:     testCatalog,
+			id:          "Book1",
+			want:        testCatalog["Book1"],
+			errExpected: false,
 		},
-		{id: "BookX", want: "Book not found"},
+		{
+			name:        "id does not exists in catalog, returns false",
+			catalog:     testCatalog,
+			id:          "Book2",
+			want:        testCatalog["Book2"],
+			errExpected: true,
+		},
 	}
 
 	for _, tc := range testCases {
-		got := bookstore.GetBookDetails(tc.id)
-		if tc.want != got {
-			t.Errorf("want (%v) got (%v)", tc.want, got)
+		got, err := bookstore.GetBookDetails(tc.id, tc.catalog)
+		errReceived := err != true
+
+		if errReceived != tc.errExpected {
+			t.Errorf(
+				"unexpected error \n \t(%v) expected \n\t(%v) received",
+				tc.errExpected,
+				errReceived,
+			)
 		}
 
+		if !cmp.Equal(tc.want, got) {
+			t.Errorf(cmp.Diff(tc.want, got))
+		}
 	}
 }
 
-func TestGetAllByAuthor(t *testing.T) {
-	want := []bookstore.Book{
-		{
-			ID:     "Book1",
-			Title:  "This is my first Book",
-			Author: []string{"The Author"},
-		},
-		{
-			ID:     "Book3",
-			Title:  "This is our third Book",
-			Author: []string{"Another Author", "The Author"},
-		},
-	}
-	got := bookstore.GetAllByAuthor("The Author")
+// func TestGetAllByAuthor(t *testing.T) {
+// 	want := []bookstore.Book{
+// 		{
+// 			ID:     "Book1",
+// 			Title:  "This is my first Book",
+// 			Author: []string{"The Author"},
+// 		},
+// 		{
+// 			ID:     "Book3",
+// 			Title:  "This is our third Book",
+// 			Author: []string{"Another Author", "The Author"},
+// 		},
+// 	}
+// 	got := bookstore.GetAllByAuthor("The Author")
 
-	if !cmp.Equal(want, got) {
-		t.Errorf(cmp.Diff(want, got))
-	}
-}
+// 	if !cmp.Equal(want, got) {
+// 		t.Errorf(cmp.Diff(want, got))
+// 	}
+// }

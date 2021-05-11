@@ -21,18 +21,20 @@ type Book struct {
 	Featured        bool
 }
 
-var Books = []Book{
-	{
+type Catalog map[string]Book
+
+var Books = Catalog{
+	"Book1": {
 		ID:     "Book1",
 		Title:  "This is my first Book",
 		Author: []string{"The Author"},
 	},
-	{
+	"Book2": {
 		ID:     "Book2",
 		Title:  "This is my second Book",
 		Author: []string{"Another Author"},
 	},
-	{
+	"Book3": {
 		ID:     "Book3",
 		Title:  "This is our third Book",
 		Author: []string{"Another Author", "The Author"},
@@ -61,31 +63,23 @@ func FeaturedBooks(c []Book) []Book {
 	return featured
 }
 
-func GetAllBooks(c []Book) []Book {
+func GetAllBooks(c Catalog) Catalog {
 	return c
 }
 
 func NewID() (id string) {
 	rand.Seed(time.Now().UnixNano())
-	charset := "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789"
+	charset := "abcdefghijklmnopqrstuvwxyz" +
+		"ABCDEFGHIJKLMNOPQRSTUVWXYZ" + "0123456789"
 	for len(id) < 3 {
 		id += string(charset[rand.Intn(len(charset))])
 	}
 	return id
 }
 
-func GetBookDetails(id string) string {
-	for _, b := range Books {
-		if b.ID == id {
-			return fmt.Sprintf(
-				"ID: %v, Title: %v, Author: %v",
-				b.ID,
-				b.Title,
-				b.Author[0],
-			)
-		}
-	}
-	return "Book not found"
+func GetBookDetails(id string, c Catalog) (Book, bool) {
+	b, ok := c[id]
+	return b, ok
 }
 
 func isIn(s string, l []string) bool {
